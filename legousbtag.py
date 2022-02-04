@@ -1,5 +1,6 @@
 #!/usr/bin/python
 
+import sys
 import usb.core
 import usb.util
 from time import sleep
@@ -30,12 +31,13 @@ def init_usb():
     dev = usb.core.find(idVendor=0x0e6f, idProduct=0x0241)
 
     if dev is None:
-        print 'Device not found'
+        print ('Device not found')
     else:
-        if dev.is_kernel_driver_active(0):
-            dev.detach_kernel_driver(0)
+        if not sys.platform.startswith('win'):
+            if dev.is_kernel_driver_active(0):
+                dev.detach_kernel_driver(0)
 
-        print usb.util.get_string(dev, dev.iProduct)
+        print (usb.util.get_string(dev, dev.iProduct))
 
         dev.set_configuration()
         dev.write(1,TOYPAD_INIT)
@@ -47,6 +49,7 @@ def send_command(dev,command):
 
     # calculate checksum
     checksum = 0
+    message = ''
     for word in command:
         checksum = checksum + word
         if checksum >= 256:
@@ -54,7 +57,7 @@ def send_command(dev,command):
         message = command+[checksum]
 
     # pad message
-    while(len(message) < 32):
+    while len(message) < 32:
         message.append(0x00)
 
     # send message
@@ -71,14 +74,14 @@ def switch_pad(pad, colour):
 def uid_compare(uid1, uid2):
     match = True
     for i in range(0,7):
-        if (uid1[i] != uid2[i]) :
+        if uid1[i] != uid2[i] :
             match = False
     return match 
 
 
 def main():
     init_usb()
-    if dev != None :
+    if dev is not None :
         while True:
             try:
                 in_packet = dev.read(0x81, 32, timeout = 10)
@@ -104,12 +107,12 @@ def main():
                         # some tag removed
                         switch_pad(pad_num, OFF)
 
-            except usb.USBError, err:
+            except usb.USBError as err:
                 pass
 
-        switch_pad(ALL_PADS,OFF)
+        switch_pad(ALL_PADS, OFF)
     return
+
 
 if __name__ == '__main__':
     main()
-  
