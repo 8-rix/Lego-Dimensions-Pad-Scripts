@@ -16,8 +16,8 @@ TOYPAD_INIT = [0x55, 0x0f, 0xb0, 0x01,
 # Event = 0x56
 
 # Colors
+OFF = [0, 0, 0]
 COLORS = {
-    'off': [0, 0, 0],
     'red': [255, 0, 0],
     'green': [0, 255, 0],
     'blue': [0, 0, 255],
