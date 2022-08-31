@@ -26,7 +26,7 @@ def main():
 
                 if not bytelist:
                     pass
-                elif bytelist[0] != 0x56: # NFC packets start with 0x56
+                elif bytelist[0] != 0x56:  # NFC packets start with 0x56
                     pass
                 else:
                     pad_num = bytelist[2]
@@ -49,7 +49,7 @@ def main():
 
                     # Tag removed
                     else:
-                        util.switch_pad(device, pad_num, util.COLORS['off'])
+                        util.switch_pad(device, pad_num, util.OFF)
                         print('Tag removed from pad ', pad_num)
 
             except usb.USBError as err:
@@ -57,7 +57,7 @@ def main():
                 pass
 
         # Switch off
-        util.switch_pad(device, util.PADS_ID['all'], util.COLORS['off'])
+        util.switch_pad(device, util.PADS_ID['all'], util.OFF)
     return
 
 
